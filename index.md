@@ -1,3 +1,3 @@
 # arduino
 
-# ~Hello World~
+# Hello World

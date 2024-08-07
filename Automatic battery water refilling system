@@ -1,0 +1,42 @@
+Description 
+The battery water refilling system is an automated solution to the maintenance
+of lead-acid batteries through the maintenance of optimum levels of water in the batteries. The device monitors the amount of water available in the batteries. and periodically refills them to ensure that the electrolytes do not run out, which would increase the life expectancy. It integrates sensors, pumps, and a control unit that manages the replenishment of water efficiently.
+
+Components used: XKC Y25 capacitive sensor, Normally Open type solenoid valve, submersible water pump, Arduino UNO, Relay modules.
+Code:
+const int waterSensorPin = 2; // Pin connected to the sensor
+const int pumpRelayPin = 3;   // Pin connected to the pump relay
+const int valveRelayPin = 4;  // Pin connected to the valve relay
+
+void setup() {
+  pinMode(waterSensorPin, INPUT);
+  pinMode(pumpRelayPin, OUTPUT);
+  pinMode(valveRelayPin, OUTPUT);
+  
+  digitalWrite(pumpRelayPin, LOW); // Ensure pump relay is off
+  digitalWrite(valveRelayPin, LOW); // Ensure valve relay is off
+  
+  Serial.begin(9600);
+}
+
+void loop() {
+  int sensorValue = digitalRead(waterSensorPin);
+  Serial.print("Sensor Value: ");
+  Serial.println(sensorValue);
+  
+  if (sensorValue == LOW) {
+    // Water level is low, turn on pump first, then valve
+    Serial.println("Water level low. Turning ON Pump");
+    digitalWrite(pumpRelayPin, HIGH);
+    delay(2000); // Wait 2 seconds to ensure pump is running
+    Serial.println("Turning ON Valve");
+    digitalWrite(valveRelayPin, HIGH);
+  } else {
+    // Water level is sufficient, turn off pump and valve
+    Serial.println("Water level sufficient. Turning OFF Pump and Valve");
+    digitalWrite(pumpRelayPin, LOW);
+    digitalWrite(valveRelayPin, LOW);
+  }
+  
+  delay(1000); // Check the water level every second
+}
